@@ -20,7 +20,8 @@ int SystemCommands(std::vector<std::string> args_orig)
         int status;
         pid_t pid = fork(); // cria o processo filho e armazena o PID retornado da função fork
 
-        char **args = new char *[args_orig.size() + 1];
+        // Para usar o comando execvp foi necessário converter uma string para o tipo necessário (array de array de char).
+        char **args = new char *[args_orig.size() + 1]; 
         
         for(int i = 0; i < args_orig.size(); i++)
         {
@@ -61,7 +62,7 @@ int SystemCommands(std::vector<std::string> args_orig)
                 delete[] args[i];
                 args[i] = nullptr;
             }
-            
+
             delete[] args;
             args = nullptr;
         

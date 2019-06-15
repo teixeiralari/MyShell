@@ -10,6 +10,8 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <ctime>
+#include <chrono> 
 
 static int Help(const std::vector<std::string> &)
 {
@@ -18,7 +20,16 @@ static int Help(const std::vector<std::string> &)
     std::cout << "mkdir <folder name> - Cria o diretório <folder name>" << std::endl;
     std::cout << "cd <new directory> - Muda o diretório para <new directory>" << std::endl;
     std::cout << "clear - Limpa a tela do terminal" << std::endl;
+    std::cout << "clock - Mostra a data e hora atual" << std::endl;
 
+    return 1;
+}
+
+static int Clock(const std::vector<std::string> &arguments){
+
+    auto timenow = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()); 
+
+    std::cout << ctime(&timenow) << std::endl; 
     return 1;
 }
 
@@ -87,6 +98,7 @@ static std::map<std::string, std::function<int(const std::vector<std::string> &)
     {"ls", ListDir},
     {"mkdir", NewDirectory},
     {"clear", Clear},
+    {"clock", Clock},
     {"quit", Quit}
 };
 
