@@ -73,7 +73,7 @@ int SystemCommands(std::vector<std::string> args_orig)
 std::string ReadLine()
 {
 
-    std::cout <<  "\x1b[35m" <<get_current_dir_name()
+    std::cout <<  "\x1b[35m" << get_current_dir_name()
               << "> " << "\x1b[0m";
     char *Temp;
     size_t Size = 0;
