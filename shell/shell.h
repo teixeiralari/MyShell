@@ -66,7 +66,7 @@ static int ListDir(const std::vector<std::string> &arguments)
     }
 
     return 1;
-}
+} 
 
 static int NewDirectory(const std::vector<std::string> &arguments)
 {
