@@ -1,38 +1,11 @@
 #include "shell.h"
 
+
 void Loop()
 {
     std::string line;
     std::vector<std::string> args;
-    int status = -1;
-
-    pid_t pid = fork();
-
-    // std::cout << "ID: " << getpid() << std::endl;
-
-    if (pid < 0) // Falha no fork
-	{
-		std::cout << "erro" << std::endl;
-	}
-
-    if (pid != 0)
-    {
-        while (true)
-        {
-            waitpid(pid, &status, WUNTRACED);
-            if ((WIFSIGNALED(status) || WIFEXITED(status)))
-                break;
-        }
-    }
-    else
-    {
-        std::string Temp;
-
-        for (auto arg : args)
-            Temp.append(arg);
-
-        execvp(args[0].c_str(), (char *const *)Temp.data());
-    }
+    int status;
 
     do
     {
@@ -42,10 +15,65 @@ void Loop()
     } while (status);
 }
 
+int SystemCommands(std::vector<std::string> args_orig)
+{
+        int status;
+        pid_t pid = fork(); // cria o processo filho e armazena o PID retornado da função fork
+
+        char **args = new char *[args_orig.size() + 1];
+        
+        for(int i = 0; i < args_orig.size(); i++)
+        {
+            args[i] = new char[args_orig[i].size()];
+            strcpy(args[i], args_orig[i].c_str());
+        }
+
+        args[args_orig.size()] = NULL;
+
+        if (pid < 0) // Falha no fork
+        {
+            perror("lsh");
+            return -1;
+        }
+
+        else{
+            if (pid != 0) // Caso fork() retorne o PID do filho, ele é o processo pai
+            {
+                while (true)
+                {
+                    waitpid(pid, &status, WUNTRACED); // espera o filho terminar o processo
+                    if ((WIFSIGNALED(status) || WIFEXITED(status)))
+                        break;
+                }
+            }
+            else
+            {
+                if (execvp(args[0], args) == -1) { // filho executa o comando
+                        perror("lsh");
+                    }
+                    exit(EXIT_FAILURE);
+
+                    /*modifica a imagem do processo filho para o arquivo chamado*/
+            }
+
+            for(int i = 0; i < args_orig.size(); i++)
+            {
+                delete[] args[i];
+                args[i] = nullptr;
+            }
+            
+            delete[] args;
+            args = nullptr;
+        
+        return 1;
+        }
+}
+
 std::string ReadLine()
 {
-    std::cout << get_current_dir_name()
-              << "> ";
+
+    std::cout <<  "\x1b[35m" <<get_current_dir_name()
+              << "> " << "\x1b[0m";
     char *Temp;
     size_t Size = 0;
 
@@ -78,26 +106,22 @@ std::vector<std::string> GetArgs(const std::string &_line)
     TempChar = nullptr;
     TempTokens = nullptr;
 
+    // Temp.push_back((char*)0x00);
+
     return Temp;
 }
 
 int Execute(const std::vector<std::string> &_args)
 {
-    int Status = 0;
     if (_args.size() == 0)
     {
-        std::cout << "Digite um comando válido" << std::endl;
         return 1;
     }
 
     if (Commands.find(_args[0]) != Commands.end())
     {
-        Status = Commands[_args[0]](_args);
+        return Commands[_args[0]](_args);
     }
-    else{
-        std::cout << "Digite um comando válido" << std::endl;
-        Status = 1;
-    }
-
-    return Status;
+    
+    return SystemCommands(_args);
 }

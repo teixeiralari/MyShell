@@ -13,11 +13,11 @@
 
 static int Help(const std::vector<std::string> &)
 {
-    std::cout << "Instruções" << std::endl;
-    std::cout << "ls: Lista todos os conteúdos do diretório atual" << std::endl;
-    std::cout << "mkdir <folder name>: Cria o diretório <folder name>" << std::endl;
-    std::cout << "cd <new directory>: Muda o diretório para <new directory>" << std::endl;
-    std::cout << "clear: Limpa a tela do terminal" << std::endl;
+    std::cout << "Funções construídas" << std::endl;
+    std::cout << "ls - Lista todos os conteúdos do diretório atual" << std::endl;
+    std::cout << "mkdir <folder name> - Cria o diretório <folder name>" << std::endl;
+    std::cout << "cd <new directory> - Muda o diretório para <new directory>" << std::endl;
+    std::cout << "clear - Limpa a tela do terminal" << std::endl;
 
     return 1;
 }
@@ -38,7 +38,7 @@ static int ChangeDir(const std::vector<std::string> &arguments)
 }
 
 
-static int listDir(const std::vector<std::string> &arguments)
+static int ListDir(const std::vector<std::string> &arguments)
 {
     struct dirent **namelist;
     int n;
@@ -57,25 +57,25 @@ static int listDir(const std::vector<std::string> &arguments)
     return 1;
 }
 
-static int new_directory(const std::vector<std::string> &arguments)
+static int NewDirectory(const std::vector<std::string> &arguments)
 {
     if (arguments.size() > 1){
         mkdir(arguments[1].data(), 0777); //0777 permissões - RWX
     }
     else{
-        std::cout << "Digite um novo diretório válido" << std::endl;
+        std::cout <<  "Digite um novo diretório válido" << std::endl;
     }
 
     return 1;
 }
 
-static int clear(const std::vector<std::string> &arguments)
+static int Clear(const std::vector<std::string> &arguments)
 {
     system("clear");
     return 1;
 }
 
-static int quit(const std::vector<std::string> &arguments)
+static int Quit(const std::vector<std::string> &arguments)
 {
     std::cout << "Bye ..." << std::endl;
     exit(0);
@@ -84,10 +84,10 @@ static int quit(const std::vector<std::string> &arguments)
 static std::map<std::string, std::function<int(const std::vector<std::string> &)>> Commands = {
     {"help", Help},
     {"cd", ChangeDir},
-    {"ls", listDir},
-    {"mkdir", new_directory},
-    {"clear", clear},
-    {"quit", quit}
+    {"ls", ListDir},
+    {"mkdir", NewDirectory},
+    {"clear", Clear},
+    {"quit", Quit}
 };
 
 void Loop();
