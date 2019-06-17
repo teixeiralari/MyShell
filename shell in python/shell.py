@@ -9,7 +9,7 @@ class Shell:
             try:
                 os.chdir(args[1])
             except Exception as e:
-                print('chdir() error: ' + str(e))
+                print('chdir() error: {0}'.format(e))
         return 1
 
     def Clock(args):
