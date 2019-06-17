@@ -19,14 +19,14 @@ class Shell:
 
     def Help(args):
         print('The following are built in: \n')
-        for key in Shell.my_commands.keys():
+        for key in Shell.MyCommands.keys():
             print(key)
         return 1
 
     def Quit(args):
         return 0
     
-    my_commands = {
+    MyCommands = {
         'cd' : ChangeDir,
         'quit' : Quit,
         'clock' : Clock,
@@ -49,8 +49,8 @@ class Shell:
     def Execute(self, args):
         if(len(args) == 0):
             return 1
-        if args[0] in Shell.my_commands.keys():
-            return Shell.my_commands[args[0]](args)
+        if args[0] in Shell.MyCommands.keys():
+            return Shell.MyCommands[args[0]](args)
 
         return self.SystemCommands(args)
 
